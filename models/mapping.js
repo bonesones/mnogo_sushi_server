@@ -31,12 +31,6 @@ const Product = sequelize.define("product", {
     image: {type: DataTypes.STRING, allowNull: false},
 })
 
-const Combo = sequelize.define('combo', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-})
-
-
-const ComboProduct = sequelize.define('combo_product')
 
 
 const Category = sequelize.define("category", {
@@ -57,15 +51,10 @@ BasketProduct.belongsTo(Basket)
 Product.hasMany(BasketProduct)
 BasketProduct.belongsTo(Product)
 
-Product.belongsToMany(Combo, {through: ComboProduct, onDelete: 'NO ACTION'})
-Combo.belongsToMany(Product, {through: ComboProduct, onDelete: 'CASCADE'})
-
 export {
     User,
     Basket,
     Product,
     Category,
-    Combo,
     BasketProduct,
-    ComboProduct,
 }

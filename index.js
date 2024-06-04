@@ -5,7 +5,7 @@ import * as mapping from "./models/mapping.js"
 import cors from "cors"
 import fileUpload from "express-fileupload"
 import router from "./routes/index.js"
-import ErrorHandler from "./middlware/ErrorHandler.js"
+import ErrorHandler from "./middlewares/ErrorHandler.js"
 
 
 
