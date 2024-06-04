@@ -1,21 +1,13 @@
 import express from "express"
+import ProductController from "../controllers/Product.js"
 
 const router = express.Router()
 
-router.get('/getall', (req, res)=>{
-    res.status(200).send('Список всех товаров')
-})
-router.get('/getone/:id([0-9]+)', (req, res)=>{
-    res.status(200).send('Один товар')
-})
-router.post('/create', (req, res) => {
-    res.status(200).send('Товар создан')
-})
-router.put('/update/:id([0-9]+)', (req, res) => {
-    res.status(200).send('Товар обновлён')
-})
-router.delete('/delete/:id([0-9]+)', (req, res) => {
-    res.status(200).send('Товар удален')
-})
+router.get('/getall', ProductController.getAll)
+router.get('/getall/categoryId/:categoryId([0-9]+)', ProductController.getAll)
+router.get('/getone/:id([0-9]+)', ProductController.getOne)
+router.post('/create', ProductController.create)
+router.put('/update/:id([0-9]+)', ProductController.update)
+router.delete('/delete/:id([0-9]+)', ProductController.delete)
 
 export default router

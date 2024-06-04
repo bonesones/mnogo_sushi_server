@@ -49,6 +49,9 @@ const Category = sequelize.define("category", {
 Basket.belongsToMany(Product, { through: BasketProduct, onDelete: 'CASCADE'})
 Product.belongsToMany(Basket, { through: BasketProduct, onDelete: 'CASCADE' })
 
+Category.hasMany(Product, {onDelete: 'RESTRICT'})
+Product.belongsTo(Category)
+
 Basket.hasMany(BasketProduct)
 BasketProduct.belongsTo(Basket)
 Product.hasMany(BasketProduct)

@@ -3,7 +3,10 @@ import config from "dotenv/config"
 import sequelize from './sequelize.js'
 import * as mapping from "./models/mapping.js"
 import cors from "cors"
+import fileUpload from "express-fileupload"
 import router from "./routes/index.js"
+import ErrorHandler from "./middlware/ErrorHandler.js"
+
 
 
 
@@ -12,7 +15,10 @@ const app = express()
 
 app.use(express.json())
 app.use(cors())
+app.use(fileUpload())
+app.use(express.static('static'))
 app.use('/api', router)
+app.use(ErrorHandler)
 
 
 const start = async () => {
