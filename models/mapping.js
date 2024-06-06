@@ -9,6 +9,8 @@ const User = sequelize.define("user", {
     email: {type: DataTypes.STRING, unique: true},
     name: {type: DataTypes.STRING},
     password: {type: DataTypes.STRING},
+    isActivated: {type: DataTypes.BOOLEAN, defaultValue: false},
+    activationLink: {type: DataTypes.STRING},
     role: {type: DataTypes.STRING, defaultValue: "USER"},
 })
 
