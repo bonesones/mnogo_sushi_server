@@ -30,7 +30,21 @@ class User {
     }
 
     async getByEmail(email) {
-        const user = await UserMapping.findOne( {where: {email} } )
+        const user = await UserMapping.findOne({where: {email}})
+        if(!user) {
+            throw new Error('Пользователь не найден')
+        }
+        return user
+    }
+
+    async isUserExistByField(field, value){
+        const user = await UserMapping.findOne({where: {[field]: value}})
+        return !!user;
+
+    }
+
+    async getByPhone(phone) {
+        const user = await UserMapping.findOne({ where: { phone } })
         if(!user) {
             throw new Error('Пользователь не найден')
         }
@@ -55,9 +69,10 @@ class User {
             phone = user.phone,
             role = user.role,
             name = user.name,
-            birthday = user.birthday
+            birthday = user.birthday,
+            isDeleted = false
         } = data
-        await user.update({email, password, role, phone, name, birthday})
+        await user.update({email, password, role, phone, name, birthday, isDeleted})
         return user
     }
 

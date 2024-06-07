@@ -6,9 +6,11 @@ import FileService from '../services/File.js'
 class Product {
     async getAll(params) {
         const { categoryId } = params
-        const where = {}
-        if(categoryId) where.categoryId = categoryId
-        const products =  await ProductMapping.findAll({where})
+        const products =  await ProductMapping.findAll({
+            where: {
+                categoryId
+            }
+        })
         return products
     }
 
@@ -22,8 +24,9 @@ class Product {
 
     async create(data, img){
         const image = FileService.save(img)
-        const { name, description, price, categoryId = null } = data
-        const product = await ProductMapping.create({name, description, price, categoryId, image})
+        console.log(data.parameter)
+        const { name, description, price, categoryId = null, parameter } = data
+        const product = await ProductMapping.create({name, description, price, categoryId, image, parameter})
         if(data.combo) {
             const combo = [];
         }

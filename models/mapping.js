@@ -12,6 +12,7 @@ const User = sequelize.define("user", {
     birthday: {type: DataTypes.DATEONLY},
     isActivated: {type: DataTypes.BOOLEAN, defaultValue: false},
     activationLink: {type: DataTypes.STRING},
+    isDeleted: {type: DataTypes.BOOLEAN, defaultValue: false},
     role: {type: DataTypes.STRING, defaultValue: "USER"},
 })
 

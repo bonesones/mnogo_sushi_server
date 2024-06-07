@@ -1,7 +1,6 @@
 import {Product as ProductMapping} from "../models/mapping.js";
 import AppError from "../errors/AppError.js";
 import UserModel from "../models/User.js"
-import UserDto from "../dtos/user-dto.js"
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs"
 import config from 'dotenv/config'
@@ -18,6 +17,14 @@ class User {
     async signup(req, res, next) {
         const { email, phone, password, submit_password, role='USER', name = '' } = req.body
         try {
+            const isEmailBusy = await UserModel.isUserExistByField("email", email);
+            const isPhoneBusy = await UserModel.isUserExistByField('phone', phone)
+            if (isEmailBusy) {
+                throw new Error('Пользователь с такой почтой уже существует')
+            }
+            if(isPhoneBusy) {
+                throw new Error('Пользователь с таким номером телефона уже существует')
+            }
             if (!email) {
                 throw new Error('Пустой email')
             }
@@ -30,13 +37,13 @@ class User {
             if (role !== 'USER') {
                 throw new Error('Возможна только роль USER')
             }
+
             const hashedPassword = await bcryptjs.hash(password, 10)
             const activationLink = uuid.v4()
             const user = await UserModel.create({name, phone, email, password: hashedPassword, role, activationLink})
             await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`)
 
-            const userDto = new UserDto(user)
-            const token = createJWT({...userDto})
+            const token = createJWT(user.id, user.email, user.role)
             res.status(202).cookie('token', token, { httpOnly: true, expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -58,6 +65,11 @@ class User {
             if(!user) {
                 throw new Error('Неверный логин')
             }
+
+            if(user.isDeleted) {
+                throw new Error("Пользователь удалён")
+            }
+
             const compare = bcryptjs.compareSync(password, user.password)
             if(!compare) {
                 throw new Error('Неверный пароль')
@@ -75,7 +87,7 @@ class User {
             if(!req.cookies?.token) {
                 throw new Error('Требуется авторизация')
             }
-            res.status(202).cookie('token', "deleted", { httpOnly: true, expires: new Date(Date.now())}).send('Куки установлены')
+            res.status(202).cookie('token', "deleted", { httpOnly: true, expires: new Date(Date.now() - 1)}).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
         }
@@ -93,12 +105,13 @@ class User {
 
     async check(req, res, next) {
         try {
-            if(!req.cookies?.token) {
-                throw new Error('Требуется авторизация')
-            }
-            const verified = jwt.verify(req.cookies.token, process.env.SECRET_KEY)
-            const user = await UserModel.getByEmail(verified.email)
-            if(!user) {
+            const userToken = req.auth
+            console.log(userToken)
+            const user = await UserModel.getByEmail(userToken.email)
+            if(!user || user.isDeleted) {
+                if(user.isDeleted) {
+                    res.cookie('token', "deleted", { httpOnly: true, expires: new Date(Date.now() - 1)})
+                }
                 throw new Error('Пользователь не существует')
             }
             res.status(200).json({message: "token is valid"})
@@ -118,11 +131,8 @@ class User {
 
     async getUser(req, res, next) {
         try {
-            if(!req.cookies.token) {
-                throw new Error('Требуется авторизация')
-            }
-            const token = jwt.verify(req.cookies.token, process.env.SECRET_KEY)
-            const { name, email, phone, birthday } = await UserModel.getByEmail(token.email)
+            const { email: tokenEmail } = req.auth
+            const { name, email, phone, birthday } = await UserModel.getByEmail(tokenEmail)
             res.status(200).json({user: { name, email, phone, birthday}})
         } catch (e) {
             next(AppError.badRequest(e.message))
@@ -166,11 +176,7 @@ class User {
 
     async updateUser(req, res, next) {
         try {
-            if(!req.cookies.token) {
-                throw new Error('Требуется авторизация')
-            }
-
-            const userToken = jwt.verify(req.cookies.token, process.env.SECRET_KEY)
+            const { id: userId } = req.auth
             const { email = null, password = null, phone = null, birthday = null, name = null, password_submit = null } = req.body;
             let hashedPassword;
 
@@ -179,9 +185,9 @@ class User {
                     throw new Error('Пароли не совпадают')
                 }
                 hashedPassword = await bcryptjs.hash(password, 10)
-                await UserModel.update(userToken.id, { name, phone, email, birthday, password: hashedPassword })
+                await UserModel.update(userId, { name, phone, email, birthday, password: hashedPassword })
             } else {
-                await UserModel.update(userToken.id, { name, phone, birthday, email })
+                await UserModel.update(userId, { name, phone, birthday, email })
             }
             res.status(200).json({
                 message: "Данные сохранены"
@@ -212,6 +218,19 @@ class User {
             }
             const user = await UserModel.update(req.params.id, {email, hashedPassword, role})
             res.status(200).json({user})
+        } catch(e) {
+            next(AppError.badRequest(e.message))
+        }
+    }
+
+    async deleteUser(req, res, next) {
+        try {
+            const userToken = req.auth
+            console.log(userToken.id)
+            await UserModel.update(userToken.id, { isDeleted: true })
+            res.status(202).cookie('token', "deleted", { httpOnly: true, expires: new Date(Date.now() - 1)}).json({
+                message: "Пользователь удалён"
+            })
         } catch(e) {
             next(AppError.badRequest(e.message))
         }
