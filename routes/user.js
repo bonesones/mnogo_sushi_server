@@ -12,6 +12,8 @@ router.get('/check', UserController.check)
 router.get('/activate/:link', UserController.activate)
 router.post('/check', UserController.check)
 
+router.get('/getuser', UserController.getUser)
+router.put('/update', UserController.updateUser)
 router.get('/getall', authMiddleware,  UserController.getAll)
 router.get('/getone/:id([0-9]+)', UserController.getOne)
 router.put('/update/:id([0-9]+)', UserController.update)

@@ -43,17 +43,21 @@ class User {
         return user
     }
 
+
     async update(id, data) {
         const user = await UserMapping.findByPk(id)
         if (!user) {
-            throw new Error('Неверный логин или пароль')
+            throw new Error('Пользователь не существует')
         }
         const {
             email = user.email,
             password = user.password,
-            role = user.role
+            phone = user.phone,
+            role = user.role,
+            name = user.name,
+            birthday = user.birthday
         } = data
-        await user.update({email, password, role})
+        await user.update({email, password, role, phone, name, birthday})
         return user
     }
 

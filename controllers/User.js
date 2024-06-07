@@ -7,6 +7,7 @@ import bcryptjs from "bcryptjs"
 import config from 'dotenv/config'
 import * as uuid from "uuid";
 import mailService from "../services/mail-service.js";
+import user from "../models/User.js";
 
 const createJWT = (id, email, role) => {
     return jwt.sign({id, email, role}, process.env.SECRET_KEY, {expiresIn: "24h"});
@@ -96,6 +97,10 @@ class User {
                 throw new Error('Требуется авторизация')
             }
             const verified = jwt.verify(req.cookies.token, process.env.SECRET_KEY)
+            const user = await UserModel.getByEmail(verified.email)
+            if(!user) {
+                throw new Error('Пользователь не существует')
+            }
             res.status(200).json({message: "token is valid"})
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -107,6 +112,19 @@ class User {
             const users = await UserModel.getAll()
             res.status(200).json({users})
         } catch(e) {
+            next(AppError.badRequest(e.message))
+        }
+    }
+
+    async getUser(req, res, next) {
+        try {
+            if(!req.cookies.token) {
+                throw new Error('Требуется авторизация')
+            }
+            const token = jwt.verify(req.cookies.token, process.env.SECRET_KEY)
+            const { name, email, phone, birthday } = await UserModel.getByEmail(token.email)
+            res.status(200).json({user: { name, email, phone, birthday}})
+        } catch (e) {
             next(AppError.badRequest(e.message))
         }
     }
@@ -141,6 +159,33 @@ class User {
             const hashedPassword = await bcryptjs.hash(password, 10)
             const user = await UserModel.create({name, phone, email, password: hashedPassword, role})
             return res.status(200).json({user})
+        } catch(e) {
+            next(AppError.badRequest(e.message))
+        }
+    }
+
+    async updateUser(req, res, next) {
+        try {
+            if(!req.cookies.token) {
+                throw new Error('Требуется авторизация')
+            }
+
+            const userToken = jwt.verify(req.cookies.token, process.env.SECRET_KEY)
+            const { email = null, password = null, phone = null, birthday = null, name = null, password_submit = null } = req.body;
+            let hashedPassword;
+
+            if(password) {
+                if(password !== password_submit) {
+                    throw new Error('Пароли не совпадают')
+                }
+                hashedPassword = await bcryptjs.hash(password, 10)
+                await UserModel.update(userToken.id, { name, phone, email, birthday, password: hashedPassword })
+            } else {
+                await UserModel.update(userToken.id, { name, phone, birthday, email })
+            }
+            res.status(200).json({
+                message: "Данные сохранены"
+            })
         } catch(e) {
             next(AppError.badRequest(e.message))
         }
