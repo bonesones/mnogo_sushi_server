@@ -23,6 +23,7 @@ const Basket = sequelize.define("basket", {
 
 
 const BasketProduct = sequelize.define("basket_product", {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     quantity: {type: DataTypes.INTEGER, defaultValue: 1},
 })
 
@@ -33,6 +34,20 @@ const Product = sequelize.define("product", {
     description: {type: DataTypes.STRING, allowNull: false},
     price: {type: DataTypes.INTEGER, allowNull: false, defaultValue: 0},
     image: {type: DataTypes.STRING, allowNull: false},
+    parameter: {type: DataTypes.STRING, allowNull: false},
+    isCombo: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false},
+    isDeleted: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false}
+}, {
+    timestamps: false
+})
+
+
+const ProductCombo = sequelize.define('product_combo', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    ParentId: { type: DataTypes.INTEGER },
+    SiblingId: { type: DataTypes.INTEGER }
+}, {
+    timestamps: false
 })
 
 
@@ -40,6 +55,8 @@ const Product = sequelize.define("product", {
 const Category = sequelize.define("category", {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name: {type: DataTypes.STRING, unique: true, allowNull: false}
+}, {
+    timestamps: false
 })
 
 
@@ -49,6 +66,14 @@ Product.belongsToMany(Basket, { through: BasketProduct, onDelete: 'CASCADE' })
 
 Category.hasMany(Product, {onDelete: 'RESTRICT'})
 Product.belongsTo(Category)
+
+User.hasOne(Basket)
+Basket.belongsTo(User)
+
+
+
+Product.belongsToMany(Product, { through: ProductCombo, as: "Parent", onDelete: 'RESTRICT', foreignKey: 'SiblingId' })
+Product.belongsToMany(Product, {through: ProductCombo, as: "Sibling", onDelete: 'RESTRICT', foreignKey: 'ParentId' })
 
 Basket.hasMany(BasketProduct)
 BasketProduct.belongsTo(Basket)

@@ -1,10 +1,10 @@
 import AppError from "../errors/AppError.js";
-import ProductModel from "../models/Product.js"
+import ComboModel from "../models/Combo.js"
 
-class Product {
+class Combo {
     async getAll(req, res, next) {
         try {
-            const products = await ProductModel.getAll(req.params?.categoryId)
+            const products = await ComboModel.getAll()
             res.status(200).json(products)
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -13,7 +13,7 @@ class Product {
 
     async getOne(req, res, next) {
         try {
-            const product = await ProductModel.getOne(req.params.id)
+            const product = await ComboModel.getOne(req.params.id)
             if(!product) {
                 throw new Error('Товар не найден в бд')
             }
@@ -25,7 +25,7 @@ class Product {
 
     async create(req, res, next) {
         try {
-            const product = await ProductModel.create(req.body, req.files?.image)
+            const product = await ComboModel.create(req.body, req.files?.image)
             res.status(200).json(product)
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -37,7 +37,7 @@ class Product {
             if(!req.params.id) {
                 throw new Error('ID товара не указан')
             }
-            const product = await ProductModel.update(req.params.id, req.body, req.files?.image)
+            const product = await ComboModel.update(req.params.id, req.body, req.files?.image)
             res.status(200).json(product)
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -49,7 +49,7 @@ class Product {
             if(!req.params.id) {
                 throw new Error('ID товара не указан')
             }
-            const product = await ProductModel.delete(req.params.id)
+            const product = await ComboModel.delete(req.params.id)
             res.status(200).json(product)
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -57,4 +57,4 @@ class Product {
     }
 }
 
-export default new Product()
+export default new Combo()

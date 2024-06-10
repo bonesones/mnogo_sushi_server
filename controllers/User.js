@@ -6,7 +6,7 @@ import bcryptjs from "bcryptjs"
 import config from 'dotenv/config'
 import * as uuid from "uuid";
 import mailService from "../services/mail-service.js";
-import user from "../models/User.js";
+import BasketModel from "../models/Basket.js"
 
 const createJWT = (id, email, role) => {
     return jwt.sign({id, email, role}, process.env.SECRET_KEY, {expiresIn: "24h"});
@@ -41,6 +41,8 @@ class User {
             const hashedPassword = await bcryptjs.hash(password, 10)
             const activationLink = uuid.v4()
             const user = await UserModel.create({name, phone, email, password: hashedPassword, role, activationLink})
+            await BasketModel.create(user.id);
+
             await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`)
 
             const token = createJWT(user.id, user.email, user.role)
