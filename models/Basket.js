@@ -59,7 +59,6 @@ class Basket {
             where: {userId},
             include: [{model: ProductMapping, as: 'products'}]
         })
-        console.log(basket)
         const basket_product = await BasketProductMapping.findOne({
             where: {basketId: basket.id, productId}
         })
@@ -89,13 +88,12 @@ class Basket {
         return basket
     }
 
-    async clear(basketId) {
+    async clear(userId) {
         const basket = await BasketMapping.findOne({
             where: {userId},
-            include: [{model: ProductMapping, as: 'products'}]
         })
         if (basket) {
-            await BasketProductMapping.destroy({where: {basketId}})
+            await BasketProductMapping.destroy({where: {basketId: basket.id }})
             await basket.reload()
         } else {
             throw new Error('Корзина не существует')

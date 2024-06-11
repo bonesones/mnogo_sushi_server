@@ -108,7 +108,6 @@ class User {
     async check(req, res, next) {
         try {
             const userToken = req.auth
-            console.log(userToken)
             const user = await UserModel.getByEmail(userToken.email)
             if(!user || user.isDeleted) {
                 if(user.isDeleted) {
@@ -228,7 +227,6 @@ class User {
     async deleteUser(req, res, next) {
         try {
             const userToken = req.auth
-            console.log(userToken.id)
             await UserModel.update(userToken.id, { isDeleted: true })
             res.status(202).cookie('token', "deleted", { httpOnly: true, expires: new Date(Date.now() - 1)}).json({
                 message: "Пользователь удалён"
