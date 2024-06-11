@@ -100,7 +100,7 @@ const Promocode = sequelize.define('promocode', {
 const Question = sequelize.define('questions', {
     id: {type: DataTypes.INTEGER, allowNull: false, autoIncrement:true, primaryKey:true},
     name: {type: DataTypes.STRING, allowNull: false},
-    description: {type: DataTypes.STRING, allowNull: false},
+    description: {type: DataTypes.TEXT, allowNull: false},
 }, {
     timestamps: false
 })
@@ -119,6 +119,7 @@ const CallBack = sequelize.define('callback', {
     name: {type: DataTypes.STRING, allowNull: false},
     phone: {type: DataTypes.STRING, allowNull: false},
     message: {type: DataTypes.STRING, allowNull: false},
+    status: {type: DataTypes.STRING, allowNull: false, defaultValue: "Новая"}
 })
 
 const Slider = sequelize.define('slider', {
@@ -169,5 +170,6 @@ export {
     Promocode,
     Promotion,
     CallBack,
+    Question,
     Slider
 }
