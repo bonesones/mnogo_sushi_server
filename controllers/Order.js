@@ -28,7 +28,6 @@ class Order {
             await BasketModel.clear(req.auth.id)
             res.status(200).json(order)
         } catch(e) {
-            console.log('here')
             next(AppError.badRequest(e.message))
         }
     }

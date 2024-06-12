@@ -6,20 +6,24 @@ class Order {
         let orders;
         if(userId) {
             orders = await OrderMapping.findAll({
-                where: {
-                    userId
-                },
+                where: { userId },
                 include: [
                     {model: OrderItemMapping, as: 'items'}
                 ]
             })
         } else {
-            orders = await OrderMapping.findAll()
+            orders = await OrderMapping.findAll({
+                include: [
+                    {model: OrderItemMapping, as: 'items'}
+                ]
+            })
         }
+
         return orders
     }
 
     async create(data) {
+        console.log(data.items)
 
         const order = await OrderMapping.create(data)
         for(let item of data.items) {
@@ -27,7 +31,8 @@ class Order {
                 name: item.name,
                 price: item.price,
                 orderId: order.id,
-                productId: item.id
+                productId: item.id,
+                quantity: item.quantity
             })
         }
         const created = await OrderMapping.findByPk(order.id, {

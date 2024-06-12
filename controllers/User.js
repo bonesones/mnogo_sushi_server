@@ -121,6 +121,14 @@ class User {
         }
     }
 
+    async getRole(req, res, next) {
+        try {
+            res.status(200).json({ role: req.auth.role })
+        } catch(e) {
+            next(AppError.badRequest(e.message))
+        }
+    }
+
     async getAll(req, res, next) {
         try {
             const users = await UserModel.getAll()

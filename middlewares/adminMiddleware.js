@@ -1,5 +1,4 @@
 import AppError from '../errors/AppError.js'
-import Product from "../models/Product.js";
 
 const admin = (req, res, next) => {
     try {

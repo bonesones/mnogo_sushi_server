@@ -14,10 +14,11 @@ router.get(
 
 router.put(
     '/admin/update/:id([0-9]+)',
-    adminMiddleware,
     authMiddleware,
+    adminMiddleware,
     OrderController.adminUpdate
 )
+
 
 
 router.get(

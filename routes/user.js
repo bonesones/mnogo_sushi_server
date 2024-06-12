@@ -11,6 +11,8 @@ router.post("/login",  UserController.login)
 router.post('/logout', UserController.logout)
 router.get('/activate/:link', UserController.activate)
 router.post('/check', authMiddleware, UserController.check)
+router.post('/create', UserController.create)
+router.post('/getrole', authMiddleware, UserController.getRole)
 
 router.get('/getuser', authMiddleware, UserController.getUser)
 router.put('/update',authMiddleware, UserController.updateUser)

@@ -3,10 +3,27 @@ import { Product as ProductMapping } from './mapping.js'
 import { BasketProduct as BasketProductMapping } from './mapping.js'
 import AppError from '../errors/AppError.js'
 
+const pretty = (basket) => {
+    const data = {}
+    data.id = basket.id
+    data.products = []
+    if (basket.products) {
+        data.products = basket.products.map(item => {
+            return {
+                id: item.id,
+                name: item.name,
+                price: item.price,
+                quantity: item.basket_product.quantity
+            }
+        })
+    }
+    return data
+}
+
 class Basket {
     async create(userId) {
         const basket = await BasketMapping.create({userId})
-        return basket
+        return pretty(basket)
     }
 
     async getOne(userId) {
@@ -17,7 +34,7 @@ class Basket {
                as: "products"
            }]
        })
-        return basket
+        return pretty(basket)
     }
 
     async append(userId, productId) {
@@ -29,13 +46,13 @@ class Basket {
             }]
         })
         const basket_product = await BasketProductMapping.findOne({
-            where: {basketId: basket.id, productId}
+            where: {basketId: basket.id, productId  }
         })
         if (!basket_product) {
             await BasketProductMapping.create({basketId: basket.id, productId, quantity: 1})
         }
         await basket.reload()
-        return basket
+        return pretty(basket)
     }
 
     async increment(userId, productId) {
@@ -51,7 +68,7 @@ class Basket {
             await basket_product.increment('quantity', {by: 1})
             await basket.reload()
         }
-        return basket
+        return pretty(basket)
     }
 
     async decrement(userId, productId) {
@@ -70,7 +87,7 @@ class Basket {
             }
             await basket.reload()
         }
-        return basket
+        return pretty(basket)
     }
 
     async remove(userId, productId) {
@@ -85,7 +102,7 @@ class Basket {
             await basket_product.destroy()
             await basket.reload()
         }
-        return basket
+        return pretty(basket)
     }
 
     async clear(userId) {
@@ -98,7 +115,7 @@ class Basket {
         } else {
             throw new Error('Корзина не существует')
         }
-        return basket
+        return pretty(basket)
     }
 
     async delete(userId) {
@@ -110,7 +127,7 @@ class Basket {
             throw new Error('Корзина не существует')
         }
         await basket.destroy()
-        return basket
+        return pretty(basket)
     }
 }
 

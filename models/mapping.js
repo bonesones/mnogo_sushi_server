@@ -83,6 +83,7 @@ const OrderItem = sequelize.define('order_item', {
     id: {type: DataTypes.INTEGER, allowNull: false, autoIncrement:true, primaryKey:true},
     name: {type: DataTypes.STRING, allowNull: false},
     price: {type: DataTypes.STRING, allowNull: false},
+    quantity: {type: DataTypes.STRING, allowNull: false}
 }, {
     timestamps: false
 })
@@ -109,7 +110,7 @@ const Promotion = sequelize.define('promotion', {
     id: {type: DataTypes.INTEGER, allowNull: false, autoIncrement:true, primaryKey:true},
     image: {type: DataTypes.STRING, allowNull: false},
     title: {type: DataTypes.STRING, allowNull: false},
-    description: {type: DataTypes.STRING, allowNull: false},
+    description: {type: DataTypes.TEXT, allowNull: false},
 }, {
     timestamps: false
 })
@@ -126,6 +127,7 @@ const Slider = sequelize.define('slider', {
     id: {type: DataTypes.INTEGER, allowNull: false, autoIncrement:true, primaryKey:true},
     desktop_image: {type: DataTypes.STRING, allowNull: false},
     tablet_phone_image: {type: DataTypes.STRING, allowNull: false},
+    title: {type: DataTypes.STRING, allowNull: false}
 }, {
     timestamps: false
 })
@@ -139,7 +141,6 @@ OrderItem.belongsTo(Product)
 User.hasMany(Order, {as: 'orders', onDelete: 'SET NULL'})
 Order.belongsTo(User)
 
-
 Basket.belongsToMany(Product, { through: BasketProduct, onDelete: 'CASCADE'})
 Product.belongsToMany(Basket, { through: BasketProduct, onDelete: 'CASCADE' })
 
@@ -148,8 +149,6 @@ Product.belongsTo(Category)
 
 User.hasOne(Basket)
 Basket.belongsTo(User)
-
-
 
 Product.belongsToMany(Product, { through: ProductCombo, as: "Parent", onDelete: 'RESTRICT', foreignKey: 'SiblingId' })
 Product.belongsToMany(Product, {through: ProductCombo, as: "Sibling", onDelete: 'RESTRICT', foreignKey: 'ParentId' })

@@ -14,6 +14,7 @@ class Basket {
     }
     async getOne(req, res, next) {
         try {
+            console.log(req.auth)
             const basket = await BasketModel.getOne(req.auth?.id)
             res.status(200).json(basket)
         } catch (e) {
