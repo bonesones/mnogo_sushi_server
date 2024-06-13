@@ -17,13 +17,14 @@ class Order {
             ready_minutes,
             amount,
             status = "Новый",
-            payment_method
+            payment_method,
+            promocodeId = null
         } = req.body
         try {
             const basket = await BasketModel.getOne(req.auth.id)
             const items = basket.products
             const order = await OrderModel.create({
-                items, is_delivery, street_house, room, entrance, floor, comment, name, phone, in_time, ready_hour, ready_minutes, amount, status, payment_method, userId: req.auth.id
+                items, is_delivery, street_house, room, entrance, floor, comment, name, phone, in_time, ready_hour, ready_minutes, amount, status, payment_method, userId: req.auth.id, promocodeId
             })
             await BasketModel.clear(req.auth.id)
             res.status(200).json(order)

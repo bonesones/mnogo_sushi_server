@@ -5,17 +5,29 @@ import FileService from '../services/File.js'
 
 class Product {
     async getAll(id) {
-        const products =  await ProductMapping.findAll({
-            where: {
-                categoryId: id
-            },
-            include: [
-                {
-                    model: ProductMapping,
-                    as: "Sibling",
-                }
-            ]
-        })
+        let products
+        if(id) {
+            products =  await ProductMapping.findAll({
+                where: {
+                    categoryId: id
+                },
+                include: [
+                    {
+                        model: ProductMapping,
+                        as: "Sibling",
+                    }
+                ]
+            })
+        } else {
+            products =  await ProductMapping.findAll({
+                include: [
+                    {
+                        model: ProductMapping,
+                        as: "Sibling",
+                    }
+                ]
+            })
+        }
         return products
     }
 
@@ -30,18 +42,18 @@ class Product {
         return product
     }
 
-    async create(data, img){
-        const image = FileService.save(img)
-        const { name, description, price, categoryId = null, parameter, products = null } = data
+    async create(data, image){
+        const { name, description, price, categoryId = null, parameter, products = null} = data
+        const img = FileService.save(image)
         let product;
         if(products) {
-            product = await ProductMapping.create({name, description, price, categoryId, image, parameter, isCombo:true})
+            product = await ProductMapping.create({name, description, price, categoryId, image: img, parameter, isCombo:true})
             for (const subProductId of JSON.parse(products)) {
                 const subproduct = await ProductMapping.findByPk(subProductId)
                 await product.addSibling(subproduct)
             }
         } else {
-            product = await ProductMapping.create({name, description, price, categoryId, image, parameter, isCombo:false})
+            product = await ProductMapping.create({name, description, price, categoryId, image: img, parameter, isCombo:false})
         }
         return product
     }

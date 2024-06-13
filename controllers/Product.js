@@ -25,6 +25,7 @@ class Product {
 
     async create(req, res, next) {
         try {
+            console.log(req.files)
             const product = await ProductModel.create(req.body, req.files?.image)
             res.status(200).json(product)
         } catch(e) {

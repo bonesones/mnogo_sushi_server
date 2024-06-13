@@ -5,11 +5,12 @@ const maxAge = 60 * 60 * 1000 * 24 * 365
 const signed = true
 
 class Basket {
-    async create(req, res, text) {
+    async create(req, res, next) {
         try {
-            const basket = await BasketModel.create({userId: req.auth.id})
+            const basket = await BasketModel.create(req.auth.id)
+            res.status(200).json(basket)
         } catch(e) {
-            console.log(e)
+            next(AppError.badRequest(e.message))
         }
     }
     async getOne(req, res, next) {

@@ -135,6 +135,9 @@ const Slider = sequelize.define('slider', {
 Order.hasMany(OrderItem, {as: 'items', onDelete: 'CASCADE'})
 OrderItem.belongsTo(Order)
 
+Promocode.hasMany(Order, {as: 'orders', onDelete: "RESTRICT"})
+Order.belongsTo(Promocode)
+
 Product.hasMany(OrderItem, {as: 'items', onDelete: "SET NULL"})
 OrderItem.belongsTo(Product)
 

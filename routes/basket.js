@@ -3,7 +3,7 @@ import BasketController from "../controllers/Basket.js"
 import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router()
-router.post('/create', BasketController.create)
+router.post('/create', authMiddleware, BasketController.create)
 router.get('/getone', authMiddleware, BasketController.getOne)
 router.put('/product/:productId([0-9]+)/append', authMiddleware, BasketController.append)
 router.put('/product/:productId([0-9]+)/increment', authMiddleware, BasketController.increment)

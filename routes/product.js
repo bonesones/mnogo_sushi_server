@@ -1,5 +1,8 @@
 import express from "express"
 import ProductController from "../controllers/Product.js"
+import multer from "multer"
+
+const upload = multer()
 
 const router = express.Router()
 
