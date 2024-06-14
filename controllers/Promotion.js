@@ -37,7 +37,7 @@ class Promotion {
             if(!req.params.id) {
                 throw new Error('ID акции не указан')
             }
-            const promotion = await PromotionModel.update(req.params.id, req.body)
+            const promotion = await PromotionModel.update(req.params.id, req.body, req.files?.image)
             res.status(200).json(promotion)
         } catch(e) {
             next(AppError.badRequest(e.message))

@@ -2,7 +2,9 @@ import {CallBack as CallbackMapping} from './mapping.js'
 
 class Callback {
     async getAll() {
-        const callbacks = await CallbackMapping.findAll()
+        const callbacks = await CallbackMapping.findAll({
+            order: [['id', 'DESC']]
+        })
         return callbacks
     }
 

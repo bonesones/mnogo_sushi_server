@@ -1,19 +1,21 @@
-import { Basket as BasketMapping } from './mapping.js'
+import {Basket as BasketMapping, BasketProduct} from './mapping.js'
 import { Product as ProductMapping } from './mapping.js'
 import { BasketProduct as BasketProductMapping } from './mapping.js'
 import AppError from '../errors/AppError.js'
+import {Sequelize} from "sequelize";
 
 const pretty = (basket) => {
     const data = {}
     data.id = basket.id
     data.products = []
     if (basket.products) {
+        console.log(basket.products)
         data.products = basket.products.map(item => {
             return {
                 id: item.id,
                 name: item.name,
                 price: item.price,
-                quantity: item.basket_product.quantity
+                quantity: item.basket_products.quantity
             }
         })
     }
@@ -31,8 +33,14 @@ class Basket {
            where: { userId },
            include: [{
                model: ProductMapping,
-               as: "products"
-           }]
+               as: "products",
+               through: {
+                   model: BasketProductMapping,
+                   as: "basket_products",
+                   attributes: ["id", "quantity"]
+               }
+           }],
+           order: [[{model: ProductMapping, as: "products"}, {model:BasketProductMapping, as: "basket_products"}, 'id', 'DESC']]
        })
         return pretty(basket)
     }
@@ -42,8 +50,14 @@ class Basket {
             where: { userId },
             include: [{
                 model: ProductMapping,
-                as: "products"
-            }]
+                as: "products",
+                through: {
+                    model: BasketProductMapping,
+                    as: "basket_products",
+                    attributes: ["id", "quantity"]
+                }
+            }],
+            order: [[{model: ProductMapping, as: "products"}, {model:BasketProductMapping, as: "basket_products"}, 'id', 'DESC']]
         })
         const basket_product = await BasketProductMapping.findOne({
             where: {basketId: basket.id, productId  }
@@ -52,29 +66,79 @@ class Basket {
             await BasketProductMapping.create({basketId: basket.id, productId, quantity: 1})
         }
         await basket.reload()
-        return pretty(basket)
+
+        const newBasket = await BasketMapping.findOne({
+            where: { userId },
+            include: [{
+                model: ProductMapping,
+                as: "products",
+                through: {
+                    model: BasketProductMapping,
+                    as: "basket_products",
+                    attributes: ["id", "quantity"]
+                }
+            }],
+            order: [[{model: ProductMapping, as: "products"}, {model:BasketProductMapping, as: "basket_products"}, 'id', 'DESC']]
+        })
+
+
+        return pretty(newBasket)
     }
 
     async increment(userId, productId) {
         const basket = await BasketMapping.findOne({
-            where: {userId},
-            include: [{model: ProductMapping, as: 'products'}]
+            where: { userId },
+            include: [{
+                model: ProductMapping,
+                as: "products",
+                through: {
+                    model: BasketProductMapping,
+                    as: "basket_products",
+                    attributes: ["id", "quantity"]
+                }
+            }],
+            order: [[{model: ProductMapping, as: "products"}, {model:BasketProductMapping, as: "basket_products"}, 'id', 'DESC']]
         })
 
         const basket_product = await BasketProductMapping.findOne({
-            where: {basketId: basket.id, productId}
+            where: {basketId: basket.id, productId},
         })
+
         if (basket_product) {
             await basket_product.increment('quantity', {by: 1})
             await basket.reload()
         }
-        return pretty(basket)
+
+        const newBasket = await BasketMapping.findOne({
+            where: { userId },
+            include: [{
+                model: ProductMapping,
+                as: "products",
+                through: {
+                    model: BasketProductMapping,
+                    as: "basket_products",
+                    attributes: ["id", "quantity"]
+                }
+            }],
+            order: [[{model: ProductMapping, as: "products"}, {model:BasketProductMapping, as: "basket_products"}, 'id', 'DESC']]
+        })
+
+        return pretty(newBasket)
     }
 
     async decrement(userId, productId) {
         const basket = await BasketMapping.findOne({
-            where: {userId},
-            include: [{model: ProductMapping, as: 'products'}]
+            where: { userId },
+            include: [{
+                model: ProductMapping,
+                as: "products",
+                through: {
+                    model: BasketProductMapping,
+                    as: "basket_products",
+                    attributes: ["id", "quantity"]
+                }
+            }],
+            order: [[{model: ProductMapping, as: "products"}, {model:BasketProductMapping, as: "basket_products"}, 'id', 'DESC']]
         })
         const basket_product = await BasketProductMapping.findOne({
             where: {basketId: basket.id, productId}
@@ -87,7 +151,22 @@ class Basket {
             }
             await basket.reload()
         }
-        return pretty(basket)
+
+        const newBasket = await BasketMapping.findOne({
+            where: { userId },
+            include: [{
+                model: ProductMapping,
+                as: "products",
+                through: {
+                    model: BasketProductMapping,
+                    as: "basket_products",
+                    attributes: ["id", "quantity"]
+                }
+            }],
+            order: [[{model: ProductMapping, as: "products"}, {model:BasketProductMapping, as: "basket_products"}, 'id', 'DESC']]
+        })
+
+        return pretty(newBasket)
     }
 
     async remove(userId, productId) {

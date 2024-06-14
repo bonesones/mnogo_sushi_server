@@ -50,7 +50,7 @@ class Product {
             if(!req.params.id) {
                 throw new Error('ID товара не указан')
             }
-            const product = await ProductModel.delete(req.params.id)
+            const product = await ProductModel.update(req.params.id, { isDeleted: true })
             res.status(200).json(product)
         } catch(e) {
             next(AppError.badRequest(e.message))

@@ -1,4 +1,5 @@
 import { Product as ProductMapping } from './mapping.js'
+import { Category as CategoryMapping } from "./mapping.js";
 import AppError from "../errors/AppError.js";
 import FileService from '../services/File.js'
 
@@ -15,6 +16,10 @@ class Product {
                     {
                         model: ProductMapping,
                         as: "Sibling",
+                    },
+                    {
+                        model: CategoryMapping,
+                        as: "category"
                     }
                 ]
             })
@@ -24,6 +29,10 @@ class Product {
                     {
                         model: ProductMapping,
                         as: "Sibling",
+                    },
+                    {
+                        model: CategoryMapping,
+                        as: "category"
                     }
                 ]
             })
@@ -32,9 +41,17 @@ class Product {
     }
 
     async getOne(id) {
-        const product = await ProductMapping.findOne(id, {
-            include: Product,
-            as: "Sibling"
+        const product = await ProductMapping.findByPk(id, {
+            include: [
+                {
+                    model: ProductMapping,
+                    as: "Sibling"
+                },
+                {
+                    model: CategoryMapping,
+                    as: "category"
+                }
+            ]
         })
         if (!product) {
             throw new Error('Товар не найден в БД')
@@ -80,6 +97,7 @@ class Product {
             price = product.price,
             image = file ? file : product.image,
             categoryId = product.categoryId,
+            isDeleted = product.isDeleted,
             parameter = product.parameter,
             products = product.Sibling
         } = data
@@ -92,12 +110,13 @@ class Product {
                 await product.addSibling(subproduct)
             }
         }
-        await product.update({name, description, price, image, categoryId, parameter })
+        await product.update({name, description, price, image, categoryId, parameter, isDeleted })
         return product
     }
 
     async delete(id) {
         const product = await ProductMapping.findByPk(id)
+        console.log(product)
         if(!product) {
             throw new Error('Товар в БД не найден')
         }

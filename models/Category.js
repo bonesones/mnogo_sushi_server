@@ -3,7 +3,9 @@ import AppError from '../errors/AppError.js'
 
 class Category {
     async getAll() {
-        const categories = await CategoryMapping.findAll()
+        const categories = await CategoryMapping.findAll({
+            order: [['id', 'ASC']],
+        })
         return categories
     }
 

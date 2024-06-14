@@ -4,7 +4,9 @@ import product from "./Product.js";
 
 class Promotion {
     async getAll() {
-        const promotions = await PromotionMapping.findAll()
+        const promotions = await PromotionMapping.findAll({
+            order: [['id', 'DESC']]
+        })
         return promotions
     }
 

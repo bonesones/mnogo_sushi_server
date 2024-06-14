@@ -13,8 +13,10 @@ class File {
     }
 
     delete(file) {
+        console.log(file)
         if (!file) return null
         const filePath = path.resolve('static', file)
+        console.log(filePath)
         unlink(filePath, (err) => {
             if(err) throw err
             console.log(filePath, ' удалён')

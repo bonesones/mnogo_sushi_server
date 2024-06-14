@@ -46,8 +46,8 @@ const Product = sequelize.define("product", {
 
 const ProductCombo = sequelize.define('product_combo', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    ParentId: { type: DataTypes.INTEGER },
-    SiblingId: { type: DataTypes.INTEGER }
+    ParentId: { type: DataTypes.INTEGER , onDelete: 'CASCADE'},
+    SiblingId: { type: DataTypes.INTEGER, onDelete: 'CASCADE' }
 }, {
     timestamps: false
 })
@@ -153,8 +153,8 @@ Product.belongsTo(Category)
 User.hasOne(Basket)
 Basket.belongsTo(User)
 
-Product.belongsToMany(Product, { through: ProductCombo, as: "Parent", onDelete: 'RESTRICT', foreignKey: 'SiblingId' })
-Product.belongsToMany(Product, {through: ProductCombo, as: "Sibling", onDelete: 'RESTRICT', foreignKey: 'ParentId' })
+Product.belongsToMany(Product, { through: ProductCombo, as: "Parent", onDelete: 'CASCADE', foreignKey: 'SiblingId' })
+Product.belongsToMany(Product, {through: ProductCombo, as: "Sibling", onDelete: 'CASCADE', foreignKey: 'ParentId' })
 
 Basket.hasMany(BasketProduct)
 BasketProduct.belongsTo(Basket)

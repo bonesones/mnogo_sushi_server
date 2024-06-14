@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 3000;
 const app = express()
 
 app.use(express.json())
-app.use(cors({credentials: true, origin: 'http://192.168.1.60:5173'}))
+app.use(cors({credentials: true, origin: process.env.CLIENT_URL}))
 app.use(fileUpload())
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(express.static('static'))
@@ -26,7 +26,7 @@ app.use(ErrorHandler)
 const start = async () => {
     try {
         await sequelize.authenticate()
-        await sequelize.sync()
+        await sequelize.sync({ alter: true })
 
         app.listen(PORT, process.env.HOST,() => {
             console.log(`Server started on port ${PORT}`);

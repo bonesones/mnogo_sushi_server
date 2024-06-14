@@ -5,6 +5,7 @@ class Category {
     async getAll(req, res, next) {
         try {
             const categories = await CategoryModel.getAll()
+            console.log(categories)
             res.status(200).json(categories)
         } catch(e) {
             next(AppError.badRequest(e.message))
