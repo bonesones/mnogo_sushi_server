@@ -7,6 +7,7 @@ export default new Sequelize(
     process.env.DB_PASS,
     {
         dialect: "postgres",
+        dialectModule: pg,
         port: process.env.DB_PORT,
         host: process.env.DB_HOST,
     }
