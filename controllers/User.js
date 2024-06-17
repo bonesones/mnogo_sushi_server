@@ -15,7 +15,7 @@ const createJWT = (id, email, role) => {
 
 class User {
     async signup(req, res, next) {
-        const { email, phone, password, submit_password, role='ADMIN', name = '' } = req.body
+        const { email, phone, password, submit_password, role='USER', name = '' } = req.body
         try {
             const isEmailBusy = await UserModel.isUserExistByField("email", email);
             const isPhoneBusy = await UserModel.isUserExistByField('phone', phone)
@@ -33,6 +33,9 @@ class User {
             }
             if(password !== submit_password) {
                 throw new Error('Парли не совпадают')
+            }
+            if (role !== 'USER') {
+                throw new Error('Возможна только роль USER')
             }
 
             const hashedPassword = await bcryptjs.hash(password, 10)
