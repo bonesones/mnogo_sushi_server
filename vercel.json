@@ -2,27 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "/index.js",
+      "src": "./index.js",
       "use": "@vercel/node"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "./index.js",
-      "methods": [
-        "GET",
-        "POST",
-        "PUT",
-        "UPDATE",
-        "DELETE",
-        "OPTIONS",
-        "PATCH"
-      ],
-      "headers": {
-        "Access-Control-Allow-Origin": "https://mnogo-sushi-phi.vercel.app",
-        "Access-Control-Allow-Credentials": "true"
-      }
+      "source": "/(.*)",
+      "destination": "/index.js"
     }
   ]
 }
