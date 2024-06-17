@@ -23,7 +23,6 @@ class Slider {
         })
 
         if(sliderExists) {
-            return sliderExists
             throw new Error('Слайд с таким названием уже существует')
         }
         const desktop_image = FileService.save(images.desktop_image)
