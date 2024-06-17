@@ -43,6 +43,7 @@ class Category {
                 name: data.name,
             }
         })
+        console.log(categoryIsExist, data.name, category.name)
         if(categoryIsExist && data.name !== category.name) {
             throw new Error("Категория с таким названием уже существует")
         }
