@@ -22,6 +22,10 @@ app.use(express.static('static'))
 app.use('/api', router)
 app.use(ErrorHandler)
 
+app.use('*', (req, res) => {
+    res.status(200).json(req)
+})
+
 app.use('/', (req, res) => {
     res.status(200).send('all good')
 })
