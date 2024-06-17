@@ -23,7 +23,7 @@ app.use('/api', router)
 app.use(ErrorHandler)
 
 app.use('*', (req, res) => {
-    res.status(200).json(req)
+    res.status(200).send('yes')
 })
 
 app.use('/', (req, res) => {
