@@ -22,7 +22,7 @@ class Slider {
             }
         })
 
-        if(sliderExists) {
+        if(Object.keys(sliderExists).length > 0) {
             throw new Error('Слайд с таким названием уже существует')
         }
         const desktop_image = FileService.save(images.desktop_image)
@@ -44,7 +44,7 @@ class Slider {
             }
         })
 
-        if(sliderExists && data.title != slider.title) {
+        if(Object.keys(sliderExists).length > 0 && data.title != slider.title) {
             throw new Error('Слайд с таким названием уже существует')
         }
 
