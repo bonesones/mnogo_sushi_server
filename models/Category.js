@@ -25,6 +25,7 @@ class Category {
             }
         })
         if(categoryIsExist) {
+            return categoryIsExist;
             throw new Error("Категория с таким названием уже существует")
         }
         const category = await CategoryMapping.create({name})
