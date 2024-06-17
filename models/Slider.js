@@ -28,6 +28,7 @@ class Slider {
         const desktop_image = FileService.save(images.desktop_image)
         const tablet_phone_image = FileService.save(images.tablet_phone_image);
         const { title } = data
+        console.log('дошло')
         const slider = await SliderMapping.create({ desktop_image, tablet_phone_image, title })
         return slider;
     }
