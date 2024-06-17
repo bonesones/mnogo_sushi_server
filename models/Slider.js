@@ -16,10 +16,13 @@ class Slider {
     }
 
     async create(data, images) {
-        const filter = { title: data.title }
-        const sliderExists = await SliderMapping.findOne(filter)
+        const sliderExists = await SliderMapping.findOne({
+            where: {
+                title: data.title,
+            }
+        })
 
-        if(sliderExists) {
+        if(typeof(sliderExists) == "object" && Object.keys(sliderExists).length > 0) {
             throw new Error('Слайд с таким названием уже существует')
         }
         const desktop_image = FileService.save(images.desktop_image)
