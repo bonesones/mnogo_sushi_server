@@ -3,17 +3,20 @@ import { unlink } from "node:fs"
 import * as path from "node:path";
 
 class File {
-    async save(file) {
+    save(file) {
         if (!file) return null
         const [_, ext] = file.mimetype.split('/')
         const fileName = uuid.v4() + "." + ext
-        await file.mv(path.resolve(process.cwd(), 'static', fileName))
+        const filePath = path.resolve('static', fileName)
+        file.mv(filePath)
         return fileName
     }
 
     delete(file) {
+        console.log(file)
         if (!file) return null
-        const filePath = path.resolve(process.cwd(), 'static', file)
+        const filePath = path.resolve('static', file)
+        console.log(filePath)
         unlink(filePath, (err) => {
             if(err) throw err
             console.log(filePath, ' удалён')
