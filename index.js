@@ -14,6 +14,8 @@ import cookieParser from "cookie-parser";
 const PORT = process.env.PORT || 3000;
 const app = express()
 
+console.log(process.env.CLIENT_URL)
+
 app.use(express.json())
 app.use(cors({credentials: true, origin: process.env.CLIENT_URL}))
 app.use(fileUpload())
@@ -22,9 +24,6 @@ app.use(express.static('static'))
 app.use('/api', router)
 app.use(ErrorHandler)
 
-app.use('*', (req, res) => {
-    res.status(200).send('yes')
-})
 
 app.use('/', (req, res) => {
     res.status(200).send('all good')
