@@ -34,9 +34,6 @@ class User {
             if(password !== submit_password) {
                 throw new Error('Парли не совпадают')
             }
-            if (role !== 'USER') {
-                throw new Error('Возможна только роль USER')
-            }
 
             const hashedPassword = await bcryptjs.hash(password, 10)
             const activationLink = uuid.v4()
