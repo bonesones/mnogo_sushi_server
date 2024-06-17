@@ -23,7 +23,7 @@ app.use('/api', router)
 app.use(ErrorHandler)
 
 app.use('/', (req, res) => {
-    res.status(200).send('all goodg')
+    res.status(200).send('all good')
 })
 
 
@@ -32,7 +32,7 @@ const start = async () => {
         await sequelize.authenticate()
         await sequelize.sync({ alter: true })
 
-        app.listen(PORT, process.env.HOST,() => {
+        app.listen(PORT,() => {
             console.log(`Server started on port ${PORT}`);
         })
     } catch(e) {
