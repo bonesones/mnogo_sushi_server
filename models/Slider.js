@@ -28,7 +28,6 @@ class Slider {
         const desktop_image = await FileService.save(images.desktop_image)
         const tablet_phone_image = await FileService.save(images.tablet_phone_image);
         const { title } = data
-        console.log('дошло')
         const slider = await SliderMapping.create({ desktop_image, tablet_phone_image, title })
         return slider;
     }
@@ -51,9 +50,6 @@ class Slider {
         const new_desktop_image = FileService.save(images?.desktop_image)
         const new_tablet_phone_image = FileService.save(images?.tablet_phone_image)
 
-        if(new_desktop_image && slider.desktop_image) {
-            FileService.delete(slider.desktop_image)
-        }
 
         if(new_tablet_phone_image && slider.tablet_phone_image) {
             FileService.delete(slider.tablet_phone_image)

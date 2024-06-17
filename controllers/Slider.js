@@ -1,5 +1,6 @@
 import AppError from "../errors/AppError.js";
 import SliderModel from "../models/Slider.js";
+import {list} from "@vercel/blob";
 
 class Slider {
     async getAll(req, res, next) {

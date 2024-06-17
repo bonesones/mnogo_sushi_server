@@ -106,9 +106,7 @@ class Product {
             throw new Error("Товар с таким названием уже существует!")
         }
         const file = FileService.save(img)
-        if (file && product.image) {
-            FileService.delete(product.image)
-        }
+
         const {
             name = product.name,
             description = product.description,
