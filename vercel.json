@@ -9,11 +9,19 @@
   "rewrites": [
     {
       "source": "/api/:path(.*)",
-      "destination": "https://mnogo-sushi-server.vercel.app/:path"
+      "destination": "https://mnogo-sushi-server.vercel.app/:path*"
+    },
+    {
+      "source": "/api/:path(.*)/",
+      "destination": "https://mnogo-sushi-server.vercel.app/:path*/"
     },
     {
       "source": "/(.*)",
       "destination": "/"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
