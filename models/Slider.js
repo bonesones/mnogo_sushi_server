@@ -24,7 +24,7 @@ class Slider {
 
         if(typeof(sliderExists) == "object") {
             const a = [typeof (sliderExists), sliderExists]
-            return typeof(sliderExists)
+            return a
             throw new Error('Слайд с таким названием уже существует')
         }
         const desktop_image = FileService.save(images.desktop_image)
