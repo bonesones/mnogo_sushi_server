@@ -16,11 +16,8 @@ class Slider {
     }
 
     async create(data, images) {
-        const sliderExists = await SliderMapping.findOne({
-            where: {
-                title: data.title,
-            }
-        })
+        const filter = { title: data.title }
+        const sliderExists = await SliderMapping.findOne(filter)
 
         if(sliderExists) {
             throw new Error('Слайд с таким названием уже существует')
