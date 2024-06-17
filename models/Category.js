@@ -24,11 +24,7 @@ class Category {
                 name: data.name,
             }
         })
-        if(categoryIsExist != null) {
-            return {
-                category: categoryIsExist,
-                test: categoryIsExist != null
-            }
+        if(Object.keys(categoryIsExist).length > 0) {
             throw new Error("Категория с таким названием уже существует")
         }
         const category = await CategoryMapping.create({name})
