@@ -23,7 +23,7 @@ class Slider {
         })
 
         if(typeof(sliderExists) == "object") {
-            const a = [typeof (sliderExists), Object?.key(sliderExists)]
+            const a = [typeof (sliderExists), Object.key(sliderExists)]
             return typeof(sliderExists)
             throw new Error('Слайд с таким названием уже существует')
         }
