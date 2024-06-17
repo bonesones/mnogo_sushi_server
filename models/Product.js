@@ -21,7 +21,8 @@ class Product {
                         model: CategoryMapping,
                         as: "category"
                     }
-                ]
+                ],
+                order: [["id", "DESC"]]
             })
         } else {
             products =  await ProductMapping.findAll({
@@ -34,7 +35,8 @@ class Product {
                         model: CategoryMapping,
                         as: "category"
                     }
-                ]
+                ],
+                order: [["id", "DESC"]]
             })
         }
         return products
@@ -60,6 +62,14 @@ class Product {
     }
 
     async create(data, image){
+        const productIsExists = ProductMapping.findOne({
+            where: {
+                name: data.name
+            }
+        })
+        if(productIsExists) {
+            throw new Error("Товар с таким названием уже существует!")
+        }
         const { name, description, price, categoryId = null, parameter, products = null} = data
         const img = FileService.save(image)
         let product;
@@ -86,6 +96,14 @@ class Product {
         })
         if(!product) {
             throw new Error('Товар не найден в БД')
+        }
+        const productIsExists = ProductMapping.findOne({
+            where: {
+                name: data.name
+            }
+        })
+        if(productIsExists && data.name !== product.name) {
+            throw new Error("Товар с таким названием уже существует!")
         }
         const file = FileService.save(img)
         if (file && product.image) {

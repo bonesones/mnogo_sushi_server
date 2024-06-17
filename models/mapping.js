@@ -109,7 +109,7 @@ const Question = sequelize.define('questions', {
 const Promotion = sequelize.define('promotion', {
     id: {type: DataTypes.INTEGER, allowNull: false, autoIncrement:true, primaryKey:true},
     image: {type: DataTypes.STRING, allowNull: false},
-    title: {type: DataTypes.STRING, allowNull: false},
+    title: {type: DataTypes.STRING, allowNull: false, unique: true},
     description: {type: DataTypes.TEXT, allowNull: false},
 }, {
     timestamps: false
@@ -127,7 +127,7 @@ const Slider = sequelize.define('slider', {
     id: {type: DataTypes.INTEGER, allowNull: false, autoIncrement:true, primaryKey:true},
     desktop_image: {type: DataTypes.STRING, allowNull: false},
     tablet_phone_image: {type: DataTypes.STRING, allowNull: false},
-    title: {type: DataTypes.STRING, allowNull: false}
+    title: {type: DataTypes.STRING, allowNull: false, unique:true}
 }, {
     timestamps: false
 })
@@ -135,7 +135,7 @@ const Slider = sequelize.define('slider', {
 Order.hasMany(OrderItem, {as: 'items', onDelete: 'CASCADE'})
 OrderItem.belongsTo(Order)
 
-Promocode.hasMany(Order, {as: 'orders', onDelete: "RESTRICT"})
+Promocode.hasMany(Order, {as: 'orders', onDelete: "SET NULL"})
 Order.belongsTo(Promocode)
 
 Product.hasMany(OrderItem, {as: 'items', onDelete: "SET NULL"})

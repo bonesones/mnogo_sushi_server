@@ -1,4 +1,4 @@
-import { Category as CategoryMapping } from './mapping.js'
+import {Category as CategoryMapping, Promotion as PromotionMapping} from './mapping.js'
 import AppError from '../errors/AppError.js'
 
 class Category {
@@ -19,14 +19,32 @@ class Category {
 
     async create(data) {
         const {name} = data
+        const categoryIsExist = CategoryMapping.findOne({
+            where: {
+                name: data.name,
+            }
+        })
+        if(categoryIsExist) {
+            throw new Error("Категория с таким названием уже существует")
+        }
         const category = await CategoryMapping.create({name})
         return category
     }
 
     async update(id, data) {
         const category = await CategoryMapping.findByPk(id)
+
         if (!category) {
             throw new Error('Категория не найдена в БД')
+        }
+
+        const categoryIsExist = CategoryMapping.findOne({
+            where: {
+                name: data.name,
+            }
+        })
+        if(categoryIsExist && data.name !== category.name) {
+            throw new Error("Категория с таким названием уже существует")
         }
         const {name = category.name} = data
         await category.update({name})

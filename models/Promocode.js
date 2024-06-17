@@ -3,7 +3,9 @@ import AppError from '../errors/AppError.js'
 
 class Promocode {
     async getAll() {
-        const promocodes = await PromocodeMapping.findAll()
+        const promocodes = await PromocodeMapping.findAll({
+            order: [['id', 'DESC']]
+        })
         return promocodes
     }
 
@@ -14,6 +16,14 @@ class Promocode {
             }
         })
         if (!promocode) {
+            throw new Error('Такого промокода не существует')
+        }
+        return promocode
+    }
+
+    async getById(id) {
+        const promocode = await PromocodeMapping.findByPk(id)
+        if(!promocode) {
             throw new Error('Такого промокода не существует')
         }
         return promocode
@@ -37,6 +47,14 @@ class Promocode {
         const promocode = await PromocodeMapping.findByPk(id)
         if (!promocode) {
             throw new Error('Такого промокода не существует')
+        }
+        const promocodeIsExists = await PromocodeMapping.findOne({
+            where: {
+                name: data.name
+            }
+        })
+        if(promocodeIsExists && data.name != promocode.name) {
+            throw new Error("Такой промокод уже существует")
         }
         const { name = promocode.name, min_amount = promocode.min_amount, discount_type = promocode.discount_type, discount_amount = promocode.discount_amount } = data
 

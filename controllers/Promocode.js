@@ -23,6 +23,18 @@ class Promocode {
         }
     }
 
+    async getById(req, res, next) {
+        try {
+            if(!req.params.id) {
+                throw new Error("Не указан ID промокода")
+            }
+            const promocode = await PromocodeModel.getById(req.params.id)
+            res.status(200).json(promocode)
+        } catch(e) {
+            next(AppError.badRequest(e.message))
+        }
+    }
+
     async create(req, res, next) {
         try {
             const promocode = await PromocodeModel.create(req.body)

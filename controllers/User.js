@@ -46,7 +46,7 @@ class User {
             await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`)
 
             const token = createJWT(user.id, user.email, user.role)
-            res.status(202).cookie('token', token, { httpOnly: true, expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
+            res.status(202).cookie('token', token, { httpOnly: true, secure: true , expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
         }
@@ -77,7 +77,7 @@ class User {
                 throw new Error('Неверный пароль')
             }
             const token = createJWT(user.id, user.email, user.role)
-            res.status(202).cookie('token', token, { httpOnly: true, expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
+            res.status(202).cookie('token', token, { httpOnly: true, secure: true, expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
         }

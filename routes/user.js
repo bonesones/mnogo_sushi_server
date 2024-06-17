@@ -2,6 +2,7 @@ import express from "express"
 import UserController from "../controllers/User.js"
 import authMiddleware from "../middlewares/authMiddleware.js"
 import AuthMiddleware from "../middlewares/authMiddleware.js";
+import adminMiddleware from "../middlewares/adminMiddleware.js";
 
 const router = express.Router()
 
@@ -18,8 +19,8 @@ router.get('/getuser', authMiddleware, UserController.getUser)
 router.put('/update',authMiddleware, UserController.updateUser)
 router.delete('/delete', authMiddleware, UserController.deleteUser)
 router.get('/getall', authMiddleware,  UserController.getAll)
-router.get('/getone/:id([0-9]+)', UserController.getOne)
-router.put('/update/:id([0-9]+)', UserController.update)
-router.delete('/delete/:id([0-9]+)', UserController.delete)
+router.get('/getone/:id([0-9]+)', authMiddleware, adminMiddleware, UserController.getOne)
+router.put('/update/:id([0-9]+)', authMiddleware, adminMiddleware, UserController.update)
+router.delete('/delete/:id([0-9]+)', authMiddleware, adminMiddleware, UserController.delete)
 
 export default router

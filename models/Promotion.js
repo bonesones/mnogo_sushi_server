@@ -20,6 +20,14 @@ class Promotion {
 
     async create(data, img) {
         const image = FileService.save(img)
+        const promotionIsExists = PromotionMapping.findOne({
+            where: {
+                title: data.title,
+            }
+        })
+        if(promotionIsExists) {
+            throw new Error("Акция с таким названием уже существует")
+        }
         const { title, description } = data
         const promotion = await PromotionMapping.create({ title, description, image })
         return promotion
@@ -29,6 +37,14 @@ class Promotion {
         const promotion = await PromotionMapping.findByPk(id)
         if (!promotion) {
             throw new Error('Акция не найдена')
+        }
+        const promotionIsExists = PromotionMapping.findOne({
+            where: {
+                title: data.title,
+            }
+        })
+        if(promotionIsExists && data.title != promotion.title) {
+            throw new Error("Акция с таким названием уже существует")
         }
         const file = FileService.save(img)
         if (file && product.image) {

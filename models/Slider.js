@@ -16,7 +16,17 @@ class Slider {
     }
 
     async create(data, images) {
+        const sliderExists = await SliderMapping.findOne({
+            where: {
+                title: data.title,
+            }
+        })
+
+        if(sliderExists) {
+            throw new Error('Слайд с таким названием уже существует')
+        }
         const desktop_image = FileService.save(images.desktop_image)
+
         const tablet_phone_image = FileService.save(images.tablet_phone_image);
         const { title } = data
         const slider = await SliderMapping.create({ desktop_image, tablet_phone_image, title })
@@ -27,6 +37,15 @@ class Slider {
         const slider = await SliderMapping.findByPk(id)
         if (!slider) {
             throw new Error('Слайд не найден')
+        }
+        const sliderExists = await SliderMapping.findOne({
+            where: {
+                title: data.title,
+            }
+        })
+
+        if(sliderExists && data.title != slider.title) {
+            throw new Error('Слайд с таким названием уже существует')
         }
 
         const new_desktop_image = FileService.save(images?.desktop_image)

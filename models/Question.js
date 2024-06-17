@@ -24,9 +24,9 @@ class Question {
         if (!question) {
             throw new Error('Вопрос не найден')
         }
-        const newQuestion = data.question ?? question.question
+        const newQuestion = data.name ?? question.name
         const newDescription = data.description ?? question.description
-        await question.update({ question: newQuestion, description: newDescription })
+        await question.update({ name: newQuestion, description: newDescription })
         return question
     }
 
