@@ -16,6 +16,7 @@ const app = express()
 
 
 app.use(cors({credentials: true, origin: process.env.CLIENT_URL}))
+app.set('trust proxy', 1)
 app.use(express.json())
 app.use(fileUpload())
 app.use(express.urlencoded({ extended: true }))
