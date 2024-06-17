@@ -19,12 +19,12 @@ class Category {
 
     async create(data) {
         const {name} = data
-        const categoryIsExist = CategoryMapping.findOne({
+        const categoryIsExist = await CategoryMapping.findOne({
             where: {
-                name: data.name,
+                name: name,
             }
         })
-        if(categoryIsExist && Object.keys(categoryIsExist).length > 0) {
+        if(categoryIsExist ) {
             throw new Error("Категория с таким названием уже существует")
         }
         const category = await CategoryMapping.create({name})
@@ -38,12 +38,12 @@ class Category {
             throw new Error('Категория не найдена в БД')
         }
 
-        const categoryIsExist = CategoryMapping.findOne({
+        const categoryIsExist = await CategoryMapping.findOne({
             where: {
                 name: data.name,
             }
         })
-        console.log(categoryIsExist, data.name, category.name)
+
         if(categoryIsExist && data.name !== category.name) {
             throw new Error("Категория с таким названием уже существует")
         }

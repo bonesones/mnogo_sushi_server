@@ -62,7 +62,7 @@ class Product {
     }
 
     async create(data, image){
-        const productIsExists = ProductMapping.findOne({
+        const productIsExists = await ProductMapping.findOne({
             where: {
                 name: data.name
             }
@@ -71,7 +71,7 @@ class Product {
             throw new Error("Товар с таким названием уже существует!")
         }
         const { name, description, price, categoryId = null, parameter, products = null} = data
-        const img = FileService.save(image)
+        const img = await FileService.save(image)
         let product;
         if(products) {
             product = await ProductMapping.create({name, description, price, categoryId, image: img, parameter, isCombo:true})
@@ -97,7 +97,7 @@ class Product {
         if(!product) {
             throw new Error('Товар не найден в БД')
         }
-        const productIsExists = ProductMapping.findOne({
+        const productIsExists = await ProductMapping.findOne({
             where: {
                 name: data.name
             }
@@ -105,7 +105,7 @@ class Product {
         if(productIsExists && data.name !== product.name) {
             throw new Error("Товар с таким названием уже существует!")
         }
-        const file = FileService.save(img)
+        const file = await FileService.save(img)
 
         const {
             name = product.name,
