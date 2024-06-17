@@ -7,13 +7,13 @@ class File {
         if (!file) return null
         const [_, ext] = file.mimetype.split('/')
         const fileName = uuid.v4() + "." + ext
-        await file.mv(path.resolve(process.cwd(), 'static', fileName))
+        await file.mv(path.resolve(process.cwd(), "..", 'static', fileName))
         return fileName
     }
 
     delete(file) {
         if (!file) return null
-        const filePath = path.resolve(process.cwd(), 'static', file)
+        const filePath = path.resolve(process.cwd(), "..", 'static', file)
         unlink(filePath, (err) => {
             if(err) throw err
             console.log(filePath, ' удалён')
