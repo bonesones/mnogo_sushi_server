@@ -12,7 +12,7 @@
       "dest": "./index.js",
       "methods": ["GET", "POST", "PUT", "UPDATE", "DELETE", "OPTIONS", "PATCH"],
       "headers": {
-        "Access-Control-Allow-Origin": "https://mnogo-sushi-server.vercel.app"
+        "Access-Control-Allow-Origin": "https://mnogo-sushi-phi.vercel.app"
       }
     }
   ]
