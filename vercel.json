@@ -10,10 +10,18 @@
     {
       "src": "/(.*)",
       "dest": "./index.js",
-      "methods": ["GET", "POST", "PUT", "UPDATE", "DELETE", "OPTIONS", "PATCH"],
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "UPDATE",
+        "DELETE",
+        "OPTIONS",
+        "PATCH"
+      ],
       "headers": {
         "Access-Control-Allow-Origin": "https://mnogo-sushi-phi.vercel.app",
-        "Access-Control-Allow-Credentials": true
+        "Access-Control-Allow-Credentials": "true"
       }
     }
   ]
