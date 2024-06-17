@@ -44,7 +44,7 @@ class Slider {
             }
         })
 
-        if(Object.keys(sliderExists).length > 0 && data.title != slider.title) {
+        if(sliderExists && Object.keys(sliderExists).length > 0 && data.title != slider.title) {
             throw new Error('Слайд с таким названием уже существует')
         }
 
