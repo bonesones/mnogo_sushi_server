@@ -14,10 +14,10 @@ import cookieParser from "cookie-parser";
 const PORT = process.env.PORT || 3000;
 const app = express()
 
-console.log(process.env.CLIENT_URL)
 
-app.use(express.json())
 app.use(cors({credentials: true, origin: process.env.CLIENT_URL}))
+app.set("trust proxy", 1)
+app.use(express.json())
 app.use(fileUpload())
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(express.static('static'))
