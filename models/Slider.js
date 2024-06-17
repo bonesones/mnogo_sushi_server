@@ -22,13 +22,10 @@ class Slider {
             }
         })
 
-        if(typeof(sliderExists) == "object") {
-            const a = [typeof (sliderExists), Boolean(sliderExists)]
-            return a
+        if(sliderExists) {
             throw new Error('Слайд с таким названием уже существует')
         }
         const desktop_image = FileService.save(images.desktop_image)
-
         const tablet_phone_image = FileService.save(images.tablet_phone_image);
         const { title } = data
         const slider = await SliderMapping.create({ desktop_image, tablet_phone_image, title })
