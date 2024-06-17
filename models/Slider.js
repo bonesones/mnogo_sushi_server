@@ -23,7 +23,7 @@ class Slider {
         })
 
         if(typeof(sliderExists) == "object") {
-            const a = [typeof (sliderExists), sliderExists]
+            const a = [typeof (sliderExists), Boolean(sliderExists)]
             return a
             throw new Error('Слайд с таким названием уже существует')
         }
