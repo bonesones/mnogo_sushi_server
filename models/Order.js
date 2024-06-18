@@ -11,7 +11,7 @@ class Order {
                     {model: OrderItemMapping, as: 'items'},
                     {model: PromocodeMapping, as: 'promocode'}
                 ],
-                order: [['id'], ['DESC']]
+                order: [['id', 'DESC']]
             })
         } else {
             orders = await OrderMapping.findAll({
@@ -19,7 +19,7 @@ class Order {
                     {model: OrderItemMapping, as: 'items'},
                     {model: PromocodeMapping, as: 'promocode'}
                 ],
-                order: [['id'], ['DESC']]
+                order: [['id', 'DESC']]
             })
         }
 

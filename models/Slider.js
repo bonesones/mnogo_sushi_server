@@ -3,7 +3,9 @@ import FileService from '../services/File.js'
 
 class Slider {
     async getAll() {
-        const sliders = await SliderMapping.findAll()
+        const sliders = await SliderMapping.findAll({
+            order: [['id', 'DESC']]
+        })
         return sliders
     }
 
