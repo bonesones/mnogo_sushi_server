@@ -10,14 +10,16 @@ class Order {
                 include: [
                     {model: OrderItemMapping, as: 'items'},
                     {model: PromocodeMapping, as: 'promocode'}
-                ]
+                ],
+                order: [['id'], ['DESC']]
             })
         } else {
             orders = await OrderMapping.findAll({
                 include: [
                     {model: OrderItemMapping, as: 'items'},
                     {model: PromocodeMapping, as: 'promocode'}
-                ]
+                ],
+                order: [['id'], ['DESC']]
             })
         }
 

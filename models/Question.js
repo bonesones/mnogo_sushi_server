@@ -2,7 +2,9 @@ import { Question as QuestionMapping } from './mapping.js'
 
 class Question {
     async getAll() {
-        const questions = await QuestionMapping.findAll()
+        const questions = await QuestionMapping.findAll({
+            order: [['id', 'DESC']],
+        })
         return questions
     }
 
