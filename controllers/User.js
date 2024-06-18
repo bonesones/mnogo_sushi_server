@@ -175,7 +175,7 @@ class User {
     }
 
     async create(req, res, next) {
-        const { email, phone, password, submit_password, role='USER', name = '' } = req.body
+        const { email, phone, password, submit_password, role='ADMIN', name = '' } = req.body
         try {
             if (!email) {
                 throw new Error('Пустой email')

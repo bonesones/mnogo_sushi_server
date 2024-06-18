@@ -1,4 +1,4 @@
 import { Sequelize } from "sequelize";
 import pg from "pg";
 
-export default new Sequelize("postgresql://postgres:aYDSleZqcmbOorWqfUXVcmcAQQoPCBkt@roundhouse.proxy.rlwy.net:11365/railway")
+export default new Sequelize(process.env.DB_CONNECT)
