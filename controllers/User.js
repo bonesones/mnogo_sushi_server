@@ -98,7 +98,12 @@ class User {
             if(!req.cookies?.token) {
                 throw new Error('Требуется авторизация')
             }
-            res.status(202).cookie('token', "deleted", { httpOnly: true, secure: true, path: '/', sameSite: "none", expires: new Date(Date.now() - 1)}).send('Куки установлены')
+            res.status(202).cookie('token', "deleted", {
+                httpOnly: true,
+                secure: true,
+                path: '/',
+                sameSite: "none",
+                expires: new Date(Date.now() - 1)}).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
         }
