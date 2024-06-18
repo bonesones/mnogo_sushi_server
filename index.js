@@ -19,6 +19,7 @@ app.use(cors({credentials: true, origin: process.env.CLIENT_URL}))
 app.set('trust proxy', 1)
 app.use(express.json())
 app.use(fileUpload())
+app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use(express.static('static'))
 app.use('/api', router)
@@ -35,7 +36,7 @@ const start = async () => {
         await sequelize.authenticate()
         await sequelize.sync()
 
-        app.listen(PORT, '192.168.1.120', () => {
+        app.listen(PORT,() => {
             console.log(`Server started on port ${PORT}`);
         })
     } catch(e) {

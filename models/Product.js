@@ -97,13 +97,16 @@ class Product {
         if(!product) {
             throw new Error('Товар не найден в БД')
         }
-        const productIsExists = await ProductMapping.findOne({
-            where: {
-                name: data.name
+
+        if(data.name) {
+            const productIsExists = await ProductMapping.findOne({
+                where: {
+                    name: data.name
+                }
+            })
+            if(productIsExists && data.name !== product.name) {
+                throw new Error("Товар с таким названием уже существует!")
             }
-        })
-        if(productIsExists && data.name !== product.name) {
-            throw new Error("Товар с таким названием уже существует!")
         }
         const file = await FileService.save(img)
 
@@ -132,7 +135,6 @@ class Product {
 
     async delete(id) {
         const product = await ProductMapping.findByPk(id)
-        console.log(product)
         if(!product) {
             throw new Error('Товар в БД не найден')
         }

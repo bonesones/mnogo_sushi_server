@@ -46,7 +46,11 @@ class User {
             await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`)
 
             const token = createJWT(user.id, user.email, user.role)
-            res.status(202).cookie('token', token, { httpOnly: true, sameSite: "none", path: '/', expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
+            res.status(202).cookie('token', token, { httpOnly: true,
+                secure: true,
+                path: "/",
+                sameSite: "none",
+                expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
         }
@@ -77,7 +81,12 @@ class User {
                 throw new Error('Неверный пароль')
             }
             const token = createJWT(user.id, user.email, user.role)
-            res.status(202).cookie('token', token, { httpOnly: true, sameSite: "none", path: '/', expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
+            res.status(202).cookie('token', token, {
+                httpOnly: true,
+                secure: true,
+                path: "/",
+                sameSite: "none",
+                expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
         }
@@ -89,7 +98,7 @@ class User {
             if(!req.cookies?.token) {
                 throw new Error('Требуется авторизация')
             }
-            res.status(202).cookie('token', "deleted", { httpOnly: true,  sameSite: "none", path: "/", expires: new Date(Date.now() - 1)}).send('Куки установлены')
+            res.status(202).cookie('token', "deleted", { httpOnly: true, secure: true, path: '/', sameSite: "none", expires: new Date(Date.now() - 1)}).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
         }
@@ -111,7 +120,7 @@ class User {
             const user = await UserModel.getByEmail(userToken.email)
             if(!user || user.isDeleted) {
                 if(user.isDeleted) {
-                    res.cookie('token', "deleted", { httpOnly: true, expires: new Date(Date.now() - 1)})
+                    res.cookie('token', "deleted", { httpOnly: true, secure: true, path: '/', sameSite: "none", expires: new Date(Date.now() - 1)})
                 }
                 throw new Error('Пользователь не существует')
             }
