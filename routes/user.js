@@ -15,7 +15,7 @@ router.post('/check', authMiddleware, UserController.check)
 router.post('/getrole', authMiddleware, UserController.getRole)
 
 router.get('/getuser', authMiddleware, UserController.getUser)
-router.put('/update',authMiddleware, UserController.updateUser)п
+router.put('/update',authMiddleware, UserController.updateUser)
 router.delete('/delete', authMiddleware, UserController.deleteUser)
 router.post('/admin/create', authMiddleware, adminMiddleware, UserController.create)
 router.get('/admin/getall', authMiddleware, adminMiddleware,  UserController.getAll)
