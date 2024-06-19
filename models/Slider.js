@@ -49,8 +49,8 @@ class Slider {
             throw new Error('Слайд с таким названием уже существует')
         }
 
-        const new_desktop_image = FileService.save(images?.desktop_image)
-        const new_tablet_phone_image = FileService.save(images?.tablet_phone_image)
+        const new_desktop_image = await FileService.save(images?.desktop_image)
+        const new_tablet_phone_image = await FileService.save(images?.tablet_phone_image)
 
         await slider.update({
             desktop_image: new_desktop_image ? new_desktop_image : slider.desktop_image,
