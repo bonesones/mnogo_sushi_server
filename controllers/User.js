@@ -177,6 +177,15 @@ class User {
     async create(req, res, next) {
         const { email, phone, password, submit_password, role='USER', name = '' } = req.body
         try {
+            const isEmailBusy = await UserModel.isUserExistByField("email", email);
+            const isPhoneBusy = await UserModel.isUserExistByField('phone', phone)
+            if (isEmailBusy) {
+                throw new Error('Пользователь с такой почтой уже существует')
+            }
+            if(isPhoneBusy) {
+                throw new Error('Пользователь с таким номером телефона уже существует')
+            }
+
             if (!email) {
                 throw new Error('Пустой email')
             }
