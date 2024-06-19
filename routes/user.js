@@ -12,15 +12,15 @@ router.post("/login",  UserController.login)
 router.post('/logout', UserController.logout)
 router.get('/activate/:link', UserController.activate)
 router.post('/check', authMiddleware, UserController.check)
-router.post('/create', UserController.create)
 router.post('/getrole', authMiddleware, UserController.getRole)
 
 router.get('/getuser', authMiddleware, UserController.getUser)
-router.put('/update',authMiddleware, UserController.updateUser)
+router.put('/update',authMiddleware, UserController.updateUser)п
 router.delete('/delete', authMiddleware, UserController.deleteUser)
-router.get('/getall', authMiddleware, adminMiddleware,  UserController.getAll)
-router.get('/getone/:id([0-9]+)', authMiddleware, adminMiddleware, UserController.getOne)
-router.put('/update/:id([0-9]+)', authMiddleware, adminMiddleware, UserController.update)
-router.delete('/delete/:id([0-9]+)', authMiddleware, adminMiddleware, UserController.delete)
+router.post('/admin/create', authMiddleware, adminMiddleware, UserController.create)
+router.get('/admin/getall', authMiddleware, adminMiddleware,  UserController.getAll)
+router.get('/admin/getone/:id([0-9]+)', authMiddleware, adminMiddleware, UserController.getOne)
+router.put('/admin/update/:id([0-9]+)', authMiddleware, adminMiddleware, UserController.update)
+router.delete('/admin/delete/:id([0-9]+)', authMiddleware, adminMiddleware, UserController.delete)
 
 export default router
