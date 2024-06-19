@@ -175,7 +175,7 @@ class User {
     }
 
     async create(req, res, next) {
-        const { email, phone, password, submit_password, role='ADMIN', name = '' } = req.body
+        const { email, phone, password, submit_password, role='USER', name = '' } = req.body
         try {
             if (!email) {
                 throw new Error('Пустой email')
@@ -228,7 +228,7 @@ class User {
             if(Object.keys(req.body).length === 0) {
                 throw new Error('Нет данных для обновления')
             }
-            const { email, password, submit_password, role } = req.body
+            const { email, password, phone, submit_password, role } = req.body
             if(role && !['USER', 'ADMIN'].includes(role)) {
                 throw new Error('Неверное значение роли')
             }
@@ -239,7 +239,7 @@ class User {
                 }
                 hashedPassword = await bcryptjs.hash(password, 10)
             }
-            const user = await UserModel.update(req.params.id, {email, hashedPassword, role})
+            const user = await UserModel.update(req.params.id, {email, hashedPassword, phone, role})
             res.status(200).json({user})
         } catch(e) {
             next(AppError.badRequest(e.message))

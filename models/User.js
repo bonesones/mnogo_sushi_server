@@ -3,7 +3,9 @@ import AppError from '../errors/AppError.js'
 
 class User {
     async getAll() {
-        const users = await UserMapping.findAll()
+        const users = await UserMapping.findAll({
+            order: [['id', 'DESC']],
+        })
         return users
     }
 
