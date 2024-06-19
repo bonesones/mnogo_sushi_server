@@ -46,10 +46,8 @@ class Promotion {
         if(promotionIsExists && data.title != promotion.title) {
             throw new Error("Акция с таким названием уже существует")
         }
-        const file = FileService.save(img)
-        if (file && product.image) {
-            FileService.delete(product.image)
-        }
+        const file = await FileService.save(img)
+
         const {
             title = promotion.title,
             description = promotion.description,
