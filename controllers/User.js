@@ -43,13 +43,11 @@ class User {
             const user = await UserModel.create({name, phone, email, password: hashedPassword, role, activationLink})
             await BasketModel.create(user.id);
 
-            await mailService.sendActivationMail(email, `${process.env.API_URL}/api/user/activate/${activationLink}`)
-
             const token = createJWT(user.id, user.email, user.role)
             res.status(202).cookie('token', token, { httpOnly: true,
                 secure: true,
                 path: "/",
-                sameSite: "none",
+                sameSite: "strict",
                 expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -85,7 +83,7 @@ class User {
                 httpOnly: true,
                 secure: true,
                 path: "/",
-                sameSite: "none",
+                sameSite: "strict",
                 expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -102,8 +100,8 @@ class User {
                 httpOnly: true,
                 secure: true,
                 path: '/',
-                sameSite: "none",
-                expires: new Date(Date.now() - 1)}).send('Куки установлены')
+                sameSite: "strict",
+                expires: new Date(Date.nogw() - 1)}).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
         }
