@@ -1,19 +1,26 @@
 import * as uuid from "uuid"
 import { unlink } from "node:fs"
 import * as path from "node:path";
-import {put} from "@vercel/blob";
 
 class File {
-    async save(file) {
+    save(file) {
         if (!file) return null
-        console.log(file)
-        const fileName = uuid.v4() + "." + path.extname(file.name)
-        console.log(file)
-        const { url } = await put(fileName, file.data, {
-            access:'public'
-        })
-        return url
+        const [_, ext] = file.mimetype.split('/')
+        const fileName = uuid.v4() + "." + ext
+        const filePath = path.resolve('static', fileName)
+        file.mv(filePath)
+        return fileName
     }
+
+    delete(file) {
+        if (!file) return null
+        const filePath = path.resolve('static', file)
+        unlink(filePath, (err) => {
+            if(err) throw err
+            console.log(filePath, ' удалён')
+        })
+    }
+
 }
 
 export default new File()

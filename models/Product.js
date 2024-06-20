@@ -70,8 +70,8 @@ class Product {
         if(productIsExists) {
             throw new Error("Товар с таким названием уже существует!")
         }
+        const img = FileService.save(image)
         const { name, description, price, categoryId = null, parameter, products = null} = data
-        const img = await FileService.save(image)
         let product;
         if(products) {
             product = await ProductMapping.create({name, description, price, categoryId, image: img, parameter, isCombo:true})
@@ -108,7 +108,11 @@ class Product {
                 throw new Error("Товар с таким названием уже существует!")
             }
         }
-        const file = await FileService.save(img)
+
+        const file = FileService.save(img)
+        if (file && product.image) {
+            FileService.delete(product.image)
+        }
 
         const {
             name = product.name,

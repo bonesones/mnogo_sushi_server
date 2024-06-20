@@ -19,7 +19,7 @@ class Promotion {
     }
 
     async create(data, img) {
-        const image = await FileService.save(img)
+        const image = FileService.save(img)
         const promotionIsExists = await PromotionMapping.findOne({
             where: {
                 title: data.title,
@@ -46,7 +46,10 @@ class Promotion {
         if(promotionIsExists && data.title != promotion.title) {
             throw new Error("Акция с таким названием уже существует")
         }
-        const file = await FileService.save(img)
+        const file = FileService.save(img)
+        if (file && promotion.image) {
+            FileService.delete(promotion.image)
+        }
 
         const {
             title = promotion.title,
