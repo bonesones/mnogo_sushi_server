@@ -101,7 +101,7 @@ class User {
                 secure: true,
                 path: '/',
                 sameSite: "strict",
-                expires: new Date(Date.nogw() - 1)}).send('Куки установлены')
+                expires: new Date(Date.now() - 1)}).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
         }
