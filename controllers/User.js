@@ -47,7 +47,7 @@ class User {
             res.status(202).cookie('token', token, { httpOnly: true,
                 secure: true,
                 path: "/",
-                sameSite: "strict",
+                sameSite: "none",
                 expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -83,7 +83,7 @@ class User {
                 httpOnly: true,
                 secure: true,
                 path: "/",
-                sameSite: "strict",
+                sameSite: "none",
                 expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
