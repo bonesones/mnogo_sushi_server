@@ -1,4 +1,3 @@
-import {Product as ProductMapping} from "../models/mapping.js";
 import AppError from "../errors/AppError.js";
 import UserModel from "../models/User.js"
 import jwt from "jsonwebtoken";
@@ -47,7 +46,7 @@ class User {
             res.status(202).cookie('token', token, { httpOnly: true,
                 secure: true,
                 path: "/",
-                sameSite: "none",
+                sameSite: "strict",
                 expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -83,7 +82,7 @@ class User {
                 httpOnly: true,
                 secure: true,
                 path: "/",
-                sameSite: "none",
+                sameSite: "strict",
                 expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -123,7 +122,7 @@ class User {
             const user = await UserModel.getByEmail(userToken.email)
             if(!user || user.isDeleted) {
                 if(user.isDeleted) {
-                    res.cookie('token', "deleted", { httpOnly: true, secure: true, path: '/', sameSite: "none", expires: new Date(Date.now() - 1)})
+                    res.cookie('token', "deleted", { httpOnly: true, secure: true, path: '/', sameSite: "strict", expires: new Date(Date.now() - 1)})
                 }
                 throw new Error('Пользователь не существует')
             }
