@@ -46,7 +46,7 @@ class User {
             res.status(202).cookie('token', token, { httpOnly: true,
                 secure: true,
                 path: "/",
-                sameSite: "strict",
+                sameSite: "none",
                 expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -82,7 +82,7 @@ class User {
                 httpOnly: true,
                 secure: true,
                 path: "/",
-                sameSite: "strict",
+                sameSite: "none",
                 expires: new Date(Date.now() + (1000 * 60 * 60 * 24)) }).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -99,7 +99,7 @@ class User {
                 httpOnly: true,
                 secure: true,
                 path: '/',
-                sameSite: "strict",
+                sameSite: "none",
                 expires: new Date(Date.now() - 1)}).send('Куки установлены')
         } catch(e) {
             next(AppError.badRequest(e.message))
@@ -122,7 +122,7 @@ class User {
             const user = await UserModel.getByEmail(userToken.email)
             if(!user || user.isDeleted) {
                 if(user.isDeleted) {
-                    res.cookie('token', "deleted", { httpOnly: true, secure: true, path: '/', sameSite: "strict", expires: new Date(Date.now() - 1)})
+                    res.cookie('token', "deleted", { httpOnly: true, secure: true, path: '/', sameSite: "none", expires: new Date(Date.now() - 1)})
                 }
                 throw new Error('Пользователь не существует')
             }
@@ -256,7 +256,7 @@ class User {
         try {
             const userToken = req.auth
             await UserModel.update(userToken.id, { isDeleted: true })
-            res.status(202).cookie('token', "deleted", { httpOnly: true, expires: new Date(Date.now() - 1)}).json({
+            res.status(202).cookie('token', "deleted", { httpOnly: true, secure: true, expires: new Date(Date.now() - 1), sameSite: none}).json({
                 message: "Пользователь удалён"
             })
         } catch(e) {
